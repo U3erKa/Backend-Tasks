@@ -1,4 +1,9 @@
-import { num } from './src/test';
+import * as http from 'http';
+import app from './src/app';
 
-console.log(num);
-console.log(true);
+const server = http.createServer(app);
+const PORT = process.env.PORT ?? 3000;
+
+server.listen(PORT, () => {
+  console.log(`Server runs at http://localhost:${PORT}`);
+});
