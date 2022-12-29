@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { BOOK_SCHEMA } from './utils/validationSchema';
 
-export type Books = Book[];
+export type Books = BookWithId[];
 
 export type Book = yup.InferType<typeof BOOK_SCHEMA>
 
