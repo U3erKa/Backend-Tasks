@@ -9,5 +9,5 @@ export const BOOK_SCHEMA = yup.object({
   price: yup.object({
     amount: yup.number().required(),
     currency: yup.string().required(),
-  }),
+  }).required(),
 });
