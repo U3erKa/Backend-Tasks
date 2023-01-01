@@ -9,7 +9,7 @@ export const handleErrors = async (err: HTTPError, req: Request, res: Response, 
 export const handleValidationError = async (err: HTTPError, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ValidationError) {
     console.log(true)
-    return res.status(err.status ?? 500).send(err.message ?? 'Something went wrong');
+    return res.status(err.status ?? 400).send(err.message ?? 'Something went wrong');
   }
   next(err);
 };
