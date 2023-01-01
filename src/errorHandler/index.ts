@@ -3,12 +3,13 @@ import { ValidationError } from 'yup';
 import HTTPError from '../errors/HTTPError';
 
 export const handleErrors = async (err: HTTPError, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.status).send(err.message);
+  res.status(err.status ?? 500).send(err.message ?? 'Something went wrong');
 };
 
 export const handleValidationError = async (err: HTTPError, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ValidationError) {
-    return res.status(err.status).send(err.message);
+    console.log(true)
+    return res.status(err.status ?? 500).send(err.message ?? 'Something went wrong');
   }
   next(err);
 };

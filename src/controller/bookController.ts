@@ -51,7 +51,7 @@ export const deleteBook = async (req: Request, res: Response, next: NextFunction
     const {
       params: { bookId },
     } = req;
-    const deletedBook = Book.deleteBook(bookId);
+    const deletedBook = await Book.deleteBook(bookId);
 
     res.status(200).send(deletedBook);
   } catch (error) {

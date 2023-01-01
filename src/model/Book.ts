@@ -4,17 +4,23 @@ import { Book as BookWithoutId, Books, BookWithId } from '../types';
 import { readDB, updateDB } from '../utils/DBUtils';
 
 export default class Book {
-  static async create(bookData: BookWithoutId) {
+  static async #checkBookName(bookData: BookWithoutId) {
     const books = await Book.getBooks();
     const book = books.find((book) => book.name === bookData.name);
 
     if (bookData.name === book?.name) {
       throw new HTTPError(409, 'Book with given title already exists');
     }
+  }
+
+  static async create(bookData: BookWithoutId) {
+    await Book.#checkBookName(bookData);
+    const books = await Book.getBooks();
 
     const newBook: BookWithId = { ...bookData, id: Date.now() };
     books.push(newBook);
-    updateDB(BOOKS_PATH, books);
+
+    await updateDB(BOOKS_PATH, books);
     return newBook;
   }
 
@@ -27,7 +33,7 @@ export default class Book {
     const books = await this.getBooks();
     const book = books.find((book) => book.id === +id);
 
-    if (!book) {
+    if (!book || !books.length) {
       throw new HTTPError(404, 'Requested book was not found');
     }
 
@@ -35,7 +41,9 @@ export default class Book {
   }
 
   static async updateBook(id: string, bookData: BookWithoutId) {
+    await Book.#checkBookName(bookData);
     const books = await this.getBooks();
+
     books.map((book) => (book.id === +id ? { ...book, ...bookData } : book));
 
     await updateDB(BOOKS_PATH, books);
@@ -44,15 +52,11 @@ export default class Book {
   }
 
   static async deleteBook(id: string) {
-    const book = this.getBook(id);
-    if (!book) {
-      throw 404;
-    }
-
+    await this.getBook(id);
     const books = await this.getBooks();
-    books.filter((book) => book.id !== +id);
+    const newBooks = books.filter((book) => book.id !== +id);
 
-    await updateDB(BOOKS_PATH, books);
+    await updateDB(BOOKS_PATH, newBooks);
     return id;
   }
 }
