@@ -1,4 +1,5 @@
 import { BOOKS_PATH } from '../constants';
+import HTTPError from '../errors/HTTPError';
 import { Book as BookWithoutId, Books, BookWithId } from '../types';
 import { readDB, updateDB } from '../utils/DBUtils';
 
@@ -8,7 +9,7 @@ export default class Book {
     const book = books.find((book) => book.name === bookData.name);
 
     if (bookData.name === book?.name) {
-      throw 409;
+      throw new HTTPError(409, 'Book with given title already exists');
     }
 
     const newBook: BookWithId = { ...bookData, id: Date.now() };
@@ -27,7 +28,7 @@ export default class Book {
     const book = books.find((book) => book.id === +id);
 
     if (!book) {
-      throw 404;
+      throw new HTTPError(404, 'Requested book was not found');
     }
 
     return book;
