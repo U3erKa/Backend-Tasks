@@ -1,5 +1,11 @@
+import { OpenMode } from 'fs';
 import * as yup from 'yup';
 import { BOOK_SCHEMA } from './utils/validationSchema';
+
+export type FsOptions = {
+  encoding: BufferEncoding;
+  flag?: OpenMode | undefined;
+};
 
 export type Books = BookWithId[];
 
