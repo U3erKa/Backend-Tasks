@@ -1,7 +1,7 @@
 -- @block Alter, add
 ALTER TABLE workers
 ADD COLUMN is_male BOOLEAN,
-ADD COLUMN email VARCHAR(255) CHECK(email != ''),
+ADD COLUMN email VARCHAR(255) UNIQUE CHECK(email != ''),
 ADD COLUMN department VARCHAR(255) CHECK(department != '');
 
 -- @block Alter, drop

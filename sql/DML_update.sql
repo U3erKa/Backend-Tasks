@@ -5,7 +5,8 @@ WHERE name = 'Микита';
 
 -- @block Update birthday
 UPDATE workers
-SET birthday = '1975-01-01'
+SET birthday = make_date
+(1975, extract(month FROM birthday)::INT, extract(day FROM birthday)::INT)
 WHERE id = 4;
 
 -- @block Update salary 2
