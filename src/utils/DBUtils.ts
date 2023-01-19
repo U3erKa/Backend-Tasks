@@ -16,5 +16,5 @@ export const readDB = async <T>(path: string): Promise<T> => {
 
 export const updateDB = async <T>(path: string, data: T) => {
   const parsedData = JSON.stringify(data, undefined, 2);
-  return await fs.writeFile(path, parsedData, options);
+  return await fs.writeFile(path, parsedData, options.encoding);
 };
