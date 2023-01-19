@@ -9,7 +9,7 @@ export type FsOptions = {
 
 export type Books = BookWithId[];
 
-export type Book = yup.InferType<typeof BOOK_SCHEMA>
+export type Book = yup.InferType<typeof BOOK_SCHEMA>;
 
 export interface BookWithId extends Book {
   id: number;

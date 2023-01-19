@@ -5,7 +5,7 @@ import { readDB, updateDB } from '../utils/DBUtils';
 
 export default class Book {
   static async #checkBookName(bookData: BookWithoutId) {
-    const books = await Book.getBooks();
+    const books = await this.getBooks();
     const book = books.find((book) => book.name === bookData.name);
 
     if (bookData.name === book?.name) {
@@ -14,8 +14,8 @@ export default class Book {
   }
 
   static async create(bookData: BookWithoutId) {
-    await Book.#checkBookName(bookData);
-    const books = await Book.getBooks();
+    await this.#checkBookName(bookData);
+    const books = await this.getBooks();
 
     const newBook: BookWithId = { ...bookData, id: Date.now() };
     books.push(newBook);
@@ -25,7 +25,7 @@ export default class Book {
   }
 
   static async getBooks() {
-    const books: Books = await readDB(BOOKS_PATH);
+    const books = await readDB<Books>(BOOKS_PATH);
     return books;
   }
 
@@ -33,7 +33,7 @@ export default class Book {
     const books = await this.getBooks();
     const book = books.find((book) => book.id === +id);
 
-    if (!book || !books.length) {
+    if (!books.length || !book) {
       throw new HTTPError(404, 'Requested book was not found');
     }
 
@@ -41,7 +41,7 @@ export default class Book {
   }
 
   static async updateBook(id: string, bookData: BookWithoutId) {
-    await Book.#checkBookName(bookData);
+    await this.#checkBookName(bookData);
     const books = await this.getBooks();
 
     books.map((book) => (book.id === +id ? { ...book, ...bookData } : book));
