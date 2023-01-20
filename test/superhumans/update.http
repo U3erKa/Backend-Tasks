@@ -1,0 +1,9 @@
+PUT http://localhost:5000/superhumans/1
+Content-Type: application/json
+
+{
+  "nickname": "Ironwolf1",
+  "real_name": "Wolf Aufovich1",
+  "origin_description": "Forest wolf1...",
+  "catch_phrase": "Catchphrase 2"
+}

@@ -1,0 +1,9 @@
+POST http://localhost:5000/superhumans
+Content-Type: application/json
+
+{
+  "nickname": "Ironwolf",
+  "real_name": "Wolf Aufovich",
+  "origin_description": "Forest wolf...",
+  "catch_phrase": "Catchphrase 1"
+}
