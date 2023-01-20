@@ -1,11 +1,18 @@
-import { json, NextFunction, Request, Response } from 'express';
-import { BOOK_SCHEMA } from '../utils/validationSchema';
+import { EXISTING_BOOK_SCHEMA, NEW_BOOK_SCHEMA } from '../utils/validationSchema';
+import type { RequestHandler } from 'express';
 
-export const jsonParser = json();
-
-export const validateBook = async (req: Request, res: Response, next: NextFunction) => {
+export const validateNewBook: RequestHandler = async (req, res, next) => {
   try {
-    await BOOK_SCHEMA.validate(req.body);
+    await NEW_BOOK_SCHEMA.validate(req.body);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const validateExistingBook: RequestHandler = async (req, res, next) => {
+  try {
+    await EXISTING_BOOK_SCHEMA.validate(req.body);
     next();
   } catch (error) {
     next(error);

@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
 import Book from '../model/Book';
+import type { RequestHandler } from 'express';
 
-export const createBook = async (req: Request, res: Response, next: NextFunction) => {
+export const createBook: RequestHandler = async (req, res, next) => {
   try {
     const book = await Book.create(req.body);
     res.status(201).send(book);
@@ -10,7 +10,7 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const getBooks = async (req: Request, res: Response, next: NextFunction) => {
+export const getBooks: RequestHandler = async (req, res, next) => {
   try {
     const books = await Book.getBooks();
     res.status(200).send(books);
@@ -19,7 +19,7 @@ export const getBooks = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const getBook = async (req: Request, res: Response, next: NextFunction) => {
+export const getBook: RequestHandler = async (req, res, next) => {
   try {
     const {
       params: { bookId },
@@ -32,7 +32,7 @@ export const getBook = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export const updateBook = async (req: Request, res: Response, next: NextFunction) => {
+export const updateBook: RequestHandler = async (req, res, next) => {
   try {
     const {
       body,
@@ -46,7 +46,7 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteBook: RequestHandler = async (req, res, next) => {
   try {
     const {
       params: { bookId },
