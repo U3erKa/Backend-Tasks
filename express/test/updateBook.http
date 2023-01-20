@@ -1,0 +1,14 @@
+PUT http://localhost:3000/api/books/12323512423 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Loremium",
+  "author": "U2erKa",
+  "description": "lorem ipsum is a text with no meaning",
+  "format": "pdf",
+  "pages": 69,
+  "price": {
+    "amount": 399.99,
+    "currency": "UAH"
+  }
+}
