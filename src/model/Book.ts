@@ -1,13 +1,13 @@
 import { BOOKS_PATH } from '../constants';
 import HTTPError from '../errors/HTTPError';
-import { Book as BookWithoutId, Books, BookWithId } from '../types';
 import { readDB, updateDB } from '../utils/DBUtils';
+import type { Book as BookWithoutId, Books, BookWithId } from '../types';
 
 export default class Book {
-  static async #checkBookName(bookData: BookWithoutId) {
+  static async #checkBookName(bookData: BookWithoutId, updatedBookId?: number) {
     const books = await this.getBooks();
-    const book = books.find((book) => book.name === bookData.name);
-
+    const book = books.find((book) => book.name === bookData.name && book.id !== updatedBookId);
+    
     if (bookData.name === book?.name) {
       throw new HTTPError(409, 'Book with given title already exists');
     }
@@ -41,12 +41,12 @@ export default class Book {
   }
 
   static async updateBook(id: string, bookData: BookWithoutId) {
-    await this.#checkBookName(bookData);
+    await this.#checkBookName(bookData, +id);
     const books = await this.getBooks();
 
-    books.map((book) => (book.id === +id ? { ...book, ...bookData } : book));
+    const updatedBooks = books.map((book) => (book.id === +id ? { ...book, ...bookData } : book));
 
-    await updateDB(BOOKS_PATH, books);
+    await updateDB(BOOKS_PATH, updatedBooks);
     const book = await this.getBook(id);
     return book;
   }
