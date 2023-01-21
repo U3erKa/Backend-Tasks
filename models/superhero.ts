@@ -1,7 +1,9 @@
-'use strict';
-const { Model } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class SuperHero extends Model {
+import { Model } from 'sequelize';
+
+import type { Sequelize, DataTypes as _DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
+
+const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
+  class SuperHero extends Model<InferAttributes<SuperHero>, InferCreationAttributes<SuperHero>> {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -59,3 +61,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   return SuperHero;
 };
+
+// @ts-ignore the only non-type export
+export = ModelConstructor;
+export type _SuperHero = ReturnType<typeof ModelConstructor>;

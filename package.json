@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "prestart": "npx tsc",
-    "start": "nodemon --delay 100 dist/server.js",
+    "start": "nodemon dist/server.js",
     "dev": "concurrently \"npm start\" \"npx tsc -w\"",
     "dev-old": "ts-node-dev --respawn ."
   },
