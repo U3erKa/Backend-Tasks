@@ -1,9 +1,25 @@
 import { Model } from 'sequelize';
 
-import type { Sequelize, DataTypes as _DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
+import type {
+  Sequelize,
+  DataTypes as _DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from 'sequelize';
 
 const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class SuperHero extends Model<InferAttributes<SuperHero>, InferCreationAttributes<SuperHero>> {
+    declare nickname: string;
+    declare realName: string;
+    declare originDescription: string;
+    declare catchPhrase: string;
+
+    // id, createdAt & updatedAt can be undefined during creation
+    declare id: CreationOptional<number>;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -24,7 +40,7 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
           isAlpha: true,
         },
       },
-      real_name: {
+      realName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -35,7 +51,7 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
           is: /^[a-z\ \.]{4,}$/i,
         },
       },
-      origin_description: {
+      originDescription: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -43,7 +59,7 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
           notEmpty: true,
         },
       },
-      catch_phrase: {
+      catchPhrase: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -51,6 +67,9 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
           notEmpty: true,
         },
       },
+      id: DataTypes.DATE,
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
     },
     {
       sequelize,
