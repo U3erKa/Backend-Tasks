@@ -1,1 +1,1 @@
-GET http://localhost:5000/superhumans
+GET http://localhost:5000/superheroes

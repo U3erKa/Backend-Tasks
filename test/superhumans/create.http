@@ -1,4 +1,4 @@
-POST http://localhost:5000/superhumans
+POST http://localhost:5000/superheroes
 Content-Type: application/json
 
 {
