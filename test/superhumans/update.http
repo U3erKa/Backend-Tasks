@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "nickname": "Ironwolf1",
-  "real_name": "Wolf Aufovich1",
-  "origin_description": "Forest wolf1...",
-  "catch_phrase": "Catchphrase 2"
+  "realName": "Wolf Aufovich1",
+  "originDescription": "Forest wolf1...",
+  "catchPhrase": "Catchphrase 2"
 }

@@ -67,9 +67,9 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
           notEmpty: true,
         },
       },
-      id: DataTypes.DATE,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      createdAt: { type: DataTypes.DATE, allowNull: true },
+      updatedAt: { type: DataTypes.DATE, allowNull: true },
     },
     {
       sequelize,
