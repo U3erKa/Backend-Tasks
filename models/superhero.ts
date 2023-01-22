@@ -7,6 +7,7 @@ import type {
   InferCreationAttributes,
   CreationOptional,
 } from 'sequelize';
+import type { DB } from '../types';
 
 export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class SuperHero extends Model<InferAttributes<SuperHero>, InferCreationAttributes<SuperHero>> {
@@ -25,7 +26,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate(models: DB) {
       // define association here
     }
   }

@@ -71,7 +71,7 @@ export const deleteSuperHero: RequestHandler = async (req, res, next) => {
     if (deletedHeroesCount === 0) {
       throw createHttpError(404, 'Superhero not found');
     }
-    res.send(heroId);
+    res.send({data: heroId});
   } catch (error) {
     next(error);
   }

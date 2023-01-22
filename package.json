@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "prestart": "npx tsc",
+    "prestart": "tsc",
     "start": "nodemon dist/server.js",
-    "dev": "concurrently \"npm start\" \"npx tsc -w\"",
+    "cleanup": "tsc --build --clean",
+    "dev": "concurrently \"npm start\" \"tsc -w --preserveWatchOutput --pretty\"",
     "dev-old": "ts-node-dev --respawn ."
   },
   "keywords": [],
