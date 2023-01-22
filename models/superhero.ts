@@ -48,7 +48,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
           notEmpty: true,
           // allows letters, spaces and dots in name, can't start or end with whitespace
           // ex.: Rock D. Johnson
-          is: /^\S[a-z\ \.]{4,}\S$/i,
+          is: /^[a-z][a-z\ \.]{4,}[a-z]$/i,
         },
       },
       originDescription: {
