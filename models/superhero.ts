@@ -8,7 +8,7 @@ import type {
   CreationOptional,
 } from 'sequelize';
 
-const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
+export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class SuperHero extends Model<InferAttributes<SuperHero>, InferCreationAttributes<SuperHero>> {
     declare nickname: string;
     declare realName: string;
@@ -44,11 +44,11 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          // allows letters, spaces and dots in name
-          // ex.: Rock D. Johnson
           notNull: true,
           notEmpty: true,
-          is: /^[a-z\ \.]{4,}$/i,
+          // allows letters, spaces and dots in name, can't start or end with whitespace
+          // ex.: Rock D. Johnson
+          is: /^\S[a-z\ \.]{4,}\S$/i,
         },
       },
       originDescription: {
@@ -80,7 +80,3 @@ const ModelConstructor = (sequelize: Sequelize, DataTypes: typeof _DataTypes) =>
   );
   return SuperHero;
 };
-
-// @ts-ignore the only non-type export
-export = ModelConstructor;
-export type _SuperHero = ReturnType<typeof ModelConstructor>;
