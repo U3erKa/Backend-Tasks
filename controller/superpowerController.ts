@@ -41,9 +41,9 @@ export const getSuperPower: RequestHandler = async (req, res, next) => {
     const superPower = await SuperPower.findByPk(powerId);
 
     if (!superPower) {
-      throw createHttpError(404, 'Superpower not found');
+      throw createHttpError(404, `Superpower not found: ${powerId}`);
     }
-    res.send(superPower);
+    res.send({ data: superPower });
   } catch (error) {
     next(error);
   }
@@ -62,9 +62,9 @@ export const updateSuperPower: RequestHandler = async (req, res, next) => {
     });
 
     if (updatedPowersCount === 0) {
-      throw createHttpError(404, 'Superpower not found');
+      throw createHttpError(404, `Superpower not found: ${powerId}`);
     }
-    res.send(updatedPower);
+    res.send({ data: updatedPower });
   } catch (error) {
     next(error);
   }
@@ -79,7 +79,7 @@ export const deleteSuperPower: RequestHandler = async (req, res, next) => {
     const deletedPowersCount = await SuperPower.destroy({ where: { id: powerId } });
 
     if (deletedPowersCount === 0) {
-      throw createHttpError(404, 'Superpower not found');
+      throw createHttpError(404, `Superpower not found: ${powerId}`);
     }
     res.send({ data: powerId });
   } catch (error) {

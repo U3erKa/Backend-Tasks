@@ -31,9 +31,9 @@ export const getSuperHero: RequestHandler = async (req, res, next) => {
     const superHero = await SuperHero.findByPk(heroId);
 
     if (!superHero) {
-      throw createHttpError(404, 'Superhero not found');
+      throw createHttpError(404, `Superhero not found: ${heroId}`);
     }
-    res.send(superHero);
+    res.send({ data: superHero });
   } catch (error) {
     next(error);
   }
@@ -52,9 +52,9 @@ export const updateSuperHero: RequestHandler = async (req, res, next) => {
     });
 
     if (updatedHeroesCount === 0) {
-      throw createHttpError(404, 'Superhero not found');
+      throw createHttpError(404, `Superhero not found: ${heroId}`);
     }
-    res.send(updatedHero);
+    res.send({ data: updatedHero });
   } catch (error) {
     next(error);
   }
@@ -69,9 +69,9 @@ export const deleteSuperHero: RequestHandler = async (req, res, next) => {
     const deletedHeroesCount = await SuperHero.destroy({ where: { id: heroId } });
 
     if (deletedHeroesCount === 0) {
-      throw createHttpError(404, 'Superhero not found');
+      throw createHttpError(404, `Superhero not found: ${heroId}`);
     }
-    res.send({data: heroId});
+    res.send({ data: heroId });
   } catch (error) {
     next(error);
   }
