@@ -17,8 +17,6 @@ export const createSuperPower: RequestHandler = async (req, res, next) => {
 
     res.status(201).send({ data: superPowers });
   } catch (error) {
-    console.log(error.message);
-    // res.status(500).send(error.message)
     next(error);
   }
 };

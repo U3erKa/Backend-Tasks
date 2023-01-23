@@ -6,6 +6,9 @@ import type _SuperPower from './models/superpower';
 export type DB = {
   sequelize: Sequelize;
   Sequelize: typeof _Sequelize;
-  SuperHero: ReturnType<typeof _SuperHero>;
-  SuperPower: ReturnType<typeof _SuperPower>;
+  SuperHero: SuperHero;
+  SuperPower: SuperPower;
 };
+
+export type SuperHero = ReturnType<typeof _SuperHero>;
+export type SuperPower = ReturnType<typeof _SuperPower>;
