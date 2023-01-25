@@ -16,9 +16,19 @@ import type {
   BelongsToManyHasAssociationsMixin,
   BelongsToManyCountAssociationsMixin,
   BelongsToManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  HasManySetAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
   NonAttribute,
 } from 'sequelize';
-import type { DB, SuperPower } from '../types';
+import type { DB, SuperPower, Image } from '../types';
 
 export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class SuperHero extends Model<InferAttributes<SuperHero>, InferCreationAttributes<SuperHero>> {
@@ -46,9 +56,21 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
     declare countSuperPowers: BelongsToManyCountAssociationsMixin;
     declare createSuperPower: BelongsToManyCreateAssociationMixin<SuperPower & Model>;
 
+    declare getImages: HasManyGetAssociationsMixin<Image>; // Note the null assertions!
+    declare addImage: HasManyAddAssociationMixin<Image, number>;
+    declare addImages: HasManyAddAssociationsMixin<Image, number>;
+    declare setImages: HasManySetAssociationsMixin<Image, number>;
+    declare removeImage: HasManyRemoveAssociationMixin<Image, number>;
+    declare removeImages: HasManyRemoveAssociationsMixin<Image, number>;
+    declare hasImage: HasManyHasAssociationMixin<Image, number>;
+    declare hasImages: HasManyHasAssociationsMixin<Image, number>;
+    declare countImages: HasManyCountAssociationsMixin;
+    declare createImage: HasManyCreateAssociationMixin<Image & Model, 'heroId'>;
+
     // You can also pre-declare possible inclusions, these will only be populated if you
     // actively include a relation.
-    declare superPowers?: NonAttribute<SuperPower[]>; // Note this is optional since it's only populated when explicitly requested in code
+    declare superPowers?: NonAttribute<SuperPower[]>;
+    declare images?: NonAttribute<Image[]>;
 
     static associate(models: DB) {
       SuperHero.belongsToMany(models.SuperPower, {
@@ -57,6 +79,13 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         as: 'superPowers',
+      });
+
+      SuperHero.hasMany(models.Image, {
+        foreignKey: 'heroId',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        as: 'images',
       });
     }
   }
