@@ -1,6 +1,7 @@
-import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
 import { SuperHero, Image } from '../models';
+
+import type { RequestHandler } from 'express';
 
 export const addImagesToHero: RequestHandler = async (req, res, next) => {
   const {

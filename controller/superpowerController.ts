@@ -1,6 +1,7 @@
-import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
 import { SuperPower } from '../models';
+
+import type { RequestHandler } from 'express';
 
 export const createSuperPower: RequestHandler = async (req, res, next) => {
   const { body } = req;

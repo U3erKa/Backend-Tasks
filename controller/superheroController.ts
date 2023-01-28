@@ -1,6 +1,7 @@
-import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
-import { SuperHero } from '../models';
+import { Image, SuperHero, SuperPower } from '../models';
+
+import type { RequestHandler } from 'express';
 
 export const createSuperHero: RequestHandler = async (req, res, next) => {
   const { body } = req;
@@ -15,7 +16,19 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
 
 export const getSuperHeroes: RequestHandler = async (req, res, next) => {
   try {
-    const superHeroes = await SuperHero.findAll();
+    const superHeroes = await SuperHero.findAll({
+      include: [
+        {
+          model: SuperPower,
+          required: false,
+          attributes: ['id', 'superPower'],
+          through: { attributes: [] },
+          as: 'superPowers',
+        },
+        { model: Image, required: false, attributes: ['id', 'path'], as: 'images' },
+      ],
+    });
+
     res.send({ data: superHeroes });
   } catch (error) {
     next(error);
@@ -28,7 +41,18 @@ export const getSuperHero: RequestHandler = async (req, res, next) => {
   } = req;
 
   try {
-    const superHero = await SuperHero.findByPk(heroId);
+    const superHero = await SuperHero.findByPk(heroId, {
+      include: [
+        {
+          model: SuperPower,
+          required: false,
+          attributes: ['id', 'superPower'],
+          through: { attributes: [] },
+          as: 'superPowers',
+        },
+        { model: Image, required: false, attributes: ['id', 'path'], as: 'images' },
+      ],
+    });
 
     if (!superHero) {
       throw createHttpError(404, `Superhero not found: ${heroId}`);
