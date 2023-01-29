@@ -1,13 +1,48 @@
 import createHttpError from 'http-errors';
-import { Image, SuperHero, SuperPower } from '../models';
+import { Image, sequelize, SuperHero, SuperPower } from '../models';
 
 import type { RequestHandler } from 'express';
 
 export const createSuperHero: RequestHandler = async (req, res, next) => {
-  const { body } = req;
+  const {
+    body: { superPowers, images, ...heroData },
+  } = req;
 
   try {
-    const superHero = await SuperHero.create(body);
+    const superHero = await sequelize.transaction(async (transaction) => {
+      if (superPowers && !(superPowers instanceof Array)) {
+        throw createHttpError(400, 'Parameter "superPowers" must be array of strings');
+      }
+
+      const hero = await SuperHero.create(heroData, { transaction, validate: true });
+
+      if (superPowers && superPowers.length !== 0) {
+        const newPowersList: string[] = [];
+        const oldPowersList: number[] = [];
+
+        const existingPowers = await SuperPower.findAll({
+          attributes: ['superPower', 'id'],
+          transaction,
+        });
+        const powers = existingPowers.map(({ dataValues }) => dataValues.superPower);
+        const ids = existingPowers.map(({ dataValues }) => dataValues.id);
+
+        for (let i = 0; i < superPowers.length; i++) {
+          const newPower = superPowers[i];
+          powers.includes(newPower) ? oldPowersList.push(ids[i]) : newPowersList.push(newPower);
+        }
+
+        const newPowers = newPowersList.map((superPower) => ({ superPower, heroId: hero.id }));
+
+        await SuperPower.bulkCreate(newPowers, { transaction, validate: true });
+        // await hero.addSuperPowers(oldPowersList, { transaction, validate: true });
+        if (oldPowersList.length !== 0) {
+          throw createHttpError(400, 'SuperPowers must be unique; feature not implemented');
+        }
+      }
+
+      return { superHero: hero, superPowers };
+    });
     res.status(201).send({ data: superHero });
   } catch (error) {
     next(error);

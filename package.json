@@ -5,9 +5,9 @@
   "main": "server.ts",
   "scripts": {
     "prestart": "tsc",
-    "start": "nodemon dist/server.js",
+    "start": "npm run dev",
     "cleanup": "tsc --build --clean",
-    "dev": "concurrently \"npm start\" \"tsc -w --preserveWatchOutput --pretty\"",
+    "dev": "concurrently \"nodemon dist/server.js\" \"tsc -w --preserveWatchOutput --pretty\"",
     "dev-old": "ts-node-dev --respawn ."
   },
   "keywords": [],

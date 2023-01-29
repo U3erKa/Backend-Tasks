@@ -5,5 +5,10 @@ Content-Type: application/json
   "nickname": "Ironwolf",
   "realName": "Wolf Aufovich",
   "originDescription": "Forest wolf...",
-  "catchPhrase": "Catchphrase 1"
+  "catchPhrase": "Catchphrase 1",
+  "superPowers": [
+    "clip through walls",
+    "flight",
+    "xray vision"
+  ]
 }
