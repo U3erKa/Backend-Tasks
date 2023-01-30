@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import { PATTERNS } from '../constants';
 
 import type {
   Sequelize,
@@ -37,15 +38,11 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
     declare originDescription: string;
     declare catchPhrase: string;
 
-    // id, createdAt & updatedAt can be undefined during creation
     declare id: CreationOptional<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 
-    // Since TS cannot determine model association at compile time
-    // we have to declare them here purely virtually
-    // these will not exist until `Model.init` was called.
-    declare getSuperPowers: BelongsToManyGetAssociationsMixin<SuperPower>; // Note the null assertions!
+    declare getSuperPowers: BelongsToManyGetAssociationsMixin<SuperPower>;
     declare addSuperPower: BelongsToManyAddAssociationMixin<SuperPower, number>;
     declare addSuperPowers: BelongsToManyAddAssociationsMixin<SuperPower, number>;
     declare setSuperPowers: BelongsToManySetAssociationsMixin<SuperPower, number>;
@@ -56,7 +53,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
     declare countSuperPowers: BelongsToManyCountAssociationsMixin;
     declare createSuperPower: BelongsToManyCreateAssociationMixin<SuperPower & Model>;
 
-    declare getImages: HasManyGetAssociationsMixin<Image>; // Note the null assertions!
+    declare getImages: HasManyGetAssociationsMixin<Image>;
     declare addImage: HasManyAddAssociationMixin<Image, number>;
     declare addImages: HasManyAddAssociationsMixin<Image, number>;
     declare setImages: HasManySetAssociationsMixin<Image, number>;
@@ -67,8 +64,6 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
     declare countImages: HasManyCountAssociationsMixin;
     declare createImage: HasManyCreateAssociationMixin<Image & Model, 'heroId'>;
 
-    // You can also pre-declare possible inclusions, these will only be populated if you
-    // actively include a relation.
     declare superPowers?: NonAttribute<SuperPower[]>;
     declare images?: NonAttribute<Image[]>;
 
@@ -106,9 +101,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
         validate: {
           notNull: true,
           notEmpty: true,
-          // allows letters, spaces and dots in name, can't start or end with whitespace
-          // ex.: Rock D. Johnson
-          is: /^[a-z][a-z\ \.]{4,}[a-z]$/i,
+          is: PATTERNS.NAME,
         },
       },
       originDescription: {

@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import { PATTERNS } from '../constants';
 
 import type {
   Sequelize,
@@ -24,14 +25,10 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class SuperPower extends Model<InferAttributes<SuperPower>, InferCreationAttributes<SuperPower>> {
     declare superPower: string;
 
-    // id, createdAt & updatedAt can be undefined during creation
     declare id: CreationOptional<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 
-    // Since TS cannot determine model association at compile time
-    // we have to declare them here purely virtually
-    // these will not exist until `Model.init` was called.
     declare getSuperHeroes: BelongsToManyGetAssociationsMixin<SuperHero>;
     declare addSuperHero: BelongsToManyAddAssociationMixin<SuperHero, number>;
     declare addSuperHeroes: BelongsToManyAddAssociationsMixin<SuperHero, number>;
@@ -63,9 +60,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
         validate: {
           notNull: true,
           notEmpty: true,
-          // allows letters, spaces and dots in the power, can't start or end with whitespace
-          // e.g. clip through walls
-          is: /^[a-z][a-z\ \.]{4,}[a-z]$/i,
+          is: PATTERNS.POWER,
         },
       },
       id: {

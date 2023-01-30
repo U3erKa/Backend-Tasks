@@ -1,10 +1,10 @@
+import { config as dotenv } from 'dotenv';
+dotenv();
 import app from './app';
+import { PORT, BASE_URL, PROTOCOL } from './constants';
 
-const BASE_URL = 'http://localhost';
-const PORT = 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server started at ${BASE_URL}:${PORT}`);
+app.listen(PORT, BASE_URL, () => {
+  console.log(`Server started at ${PROTOCOL}://${BASE_URL}:${PORT}`);
 });
 
 export default app;

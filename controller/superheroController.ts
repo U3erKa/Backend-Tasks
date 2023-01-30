@@ -37,7 +37,7 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
         await SuperPower.bulkCreate(newPowers, { transaction, validate: true });
         // await hero.addSuperPowers(oldPowersList, { transaction, validate: true });
         if (oldPowersList.length !== 0) {
-          throw createHttpError(400, 'SuperPowers must be unique; feature not implemented');
+          throw createHttpError(400, 'SuperPowers must be unique');
         }
       }
 

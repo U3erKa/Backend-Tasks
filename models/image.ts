@@ -17,14 +17,10 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
   class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>> {
     declare path: string;
 
-    // id, createdAt & updatedAt can be undefined during creation
     declare id: CreationOptional<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 
-    // Since TS cannot determine model association at compile time
-    // we have to declare them here purely virtually
-    // these will not exist until `Model.init` was called.
     declare getSuperHero: BelongsToGetAssociationMixin<SuperHero>;
     declare addSuperHero: BelongsToSetAssociationMixin<SuperHero, number>;
     declare createSuperHero: BelongsToCreateAssociationMixin<SuperHero & Model>;
@@ -51,7 +47,11 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
 
           isSupportedExtension(filename: string) {
             const supportedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
-            return supportedExtensions.includes(filename.split('.')[1]);
+            const ext = filename.split('.')[1];
+
+            if (supportedExtensions.includes(ext)) {
+              throw new TypeError(`"${ext}" is not supported file extension`);
+            }
           },
         },
       },
