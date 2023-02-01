@@ -1,7 +1,10 @@
 import createHttpError from 'http-errors';
+
 import { Image, sequelize, SuperHero, SuperPower } from '../models';
+import { addSuperPowers, addImages } from '../services/heroService';
 
 import type { RequestHandler } from 'express';
+import type { SuperHero as _SuperHero } from '../types';
 
 export const createSuperHero: RequestHandler = async (req, res, next) => {
   const {
@@ -14,72 +17,21 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
       if (superPowers && !(superPowers instanceof Array)) {
         throw createHttpError(400, 'Parameter "superPowers" must be array of strings');
       }
+
       const result: any = {};
-
       const hero = await SuperHero.create(heroData, { transaction, validate: true });
+
       result.hero = hero;
-
-      if (superPowers && superPowers.length !== 0) {
-        const newPowersList: string[] = [];
-        const oldPowersList: number[] = [];
-
-        const existingPowers = await SuperPower.findAll({
-          attributes: ['superPower', 'id'],
-          transaction,
-        });
-        const powers = existingPowers.map(({ dataValues }) => dataValues.superPower);
-        const ids = existingPowers.map(({ dataValues }) => dataValues.id);
-
-        for (let i = 0; i < superPowers.length; i++) {
-          const newPower = superPowers[i];
-          powers.includes(newPower)
-            ? oldPowersList.push(ids[powers.indexOf(newPower)])
-            : newPowersList.push(newPower);
-        }
-
-        const newPowers = newPowersList.map((superPower) => ({ superPower }));
-
-        await SuperPower.bulkCreate(newPowers, { transaction, validate: true });
-        await hero.addSuperPowers(oldPowersList, {
-          transaction,
-          validate: true,
-        });
-
-        result.powers = superPowers;
-      }
-
-      if (files?.length) {
-        if (!(files instanceof Array)) {
-          throw createHttpError(400, `"files" field must be an array: ${typeof files}`);
-        }
-
-        const imagesPaths = files.map((file) => ({ path: file.filename, heroId: hero.id }));
-        await Image.bulkCreate(imagesPaths, { transaction, validate: true });
-
-        result.images = imagesPaths.map((image) => image.path);
-      }
+      result.powers = await addSuperPowers({ superPowers, transaction, hero });
+      result.images = await addImages({ files, transaction, hero });
 
       return result;
     });
+
     res.status(201).send({ data: superHero });
   } catch (error) {
     next(error);
   }
-};
-
-export const getHero: RequestHandler = async (req, res, next) => {
-  const {
-    params: { heroId },
-  } = req;
-
-  const hero = await SuperHero.findByPk(heroId);
-
-  if (!hero) {
-    return next(createHttpError(404, `SuperHero not found: ${heroId}`));
-  }
-  // @ts-ignore
-  req.hero = hero;
-  next();
 };
 
 export const addHeroToPower: RequestHandler = async (req, res, next) => {
@@ -90,14 +42,12 @@ export const addHeroToPower: RequestHandler = async (req, res, next) => {
   } = req;
 
   try {
-    // findAll({where: superPower in powersList})
     const power = await SuperPower.findByPk(powerId);
 
     if (!power) {
       throw createHttpError(404, `SuperPower not found: ${powerId}`);
     }
 
-    // await power.addSuperHero(hero);
     await hero.addSuperPower(power);
 
     res.send({ data: 'Hero added' });

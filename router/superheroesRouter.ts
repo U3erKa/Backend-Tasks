@@ -1,36 +1,24 @@
 import { Router } from 'express';
-import multer from 'multer';
-import path from 'path';
 
 import { addImagesToHero } from '../controller/imageController';
 import {
   addHeroToPower,
   createSuperHero,
   deleteSuperHero,
-  getHero,
   getSuperHero,
   getSuperHeroes,
   updateSuperHero,
 } from '../controller/superheroController';
+import { getHero } from '../middleware/heroMW';
+import { uploadImages } from '../middleware/imageMW';
 
 const superheroesRouter = Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, '../../public/images'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-
-const upload = multer({ storage });
-
-superheroesRouter.route('/').get(getSuperHeroes).post(upload.array('images'), createSuperHero);
+superheroesRouter.route('/').get(getSuperHeroes).post(uploadImages, createSuperHero);
 superheroesRouter
   .route('/:heroId')
   .get(getSuperHero)
-  .post(upload.array('images'), addImagesToHero)
+  .post(uploadImages, addImagesToHero)
   .put(updateSuperHero)
   .delete(deleteSuperHero);
 
