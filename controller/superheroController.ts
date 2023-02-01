@@ -14,8 +14,10 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
       if (superPowers && !(superPowers instanceof Array)) {
         throw createHttpError(400, 'Parameter "superPowers" must be array of strings');
       }
+      const result: any = {};
 
       const hero = await SuperHero.create(heroData, { transaction, validate: true });
+      result.hero = hero;
 
       if (superPowers && superPowers.length !== 0) {
         const newPowersList: string[] = [];
@@ -42,6 +44,8 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
           transaction,
           validate: true,
         });
+
+        result.powers = superPowers;
       }
 
       if (files?.length) {
@@ -51,9 +55,11 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
 
         const imagesPaths = files.map((file) => ({ path: file.filename, heroId: hero.id }));
         await Image.bulkCreate(imagesPaths, { transaction, validate: true });
+
+        result.images = imagesPaths.map((image) => image.path);
       }
 
-      return { superHero: hero, superPowers };
+      return result;
     });
     res.status(201).send({ data: superHero });
   } catch (error) {
