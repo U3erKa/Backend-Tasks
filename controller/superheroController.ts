@@ -29,10 +29,12 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
 
         for (let i = 0; i < superPowers.length; i++) {
           const newPower = superPowers[i];
-          powers.includes(newPower) ? oldPowersList.push(ids[i]) : newPowersList.push(newPower);
+          powers.includes(newPower)
+            ? oldPowersList.push(ids[powers.indexOf(newPower)])
+            : newPowersList.push(newPower);
         }
 
-        const newPowers = newPowersList.map((superPower) => ({ superPower, heroId: hero.id }));
+        const newPowers = newPowersList.map((superPower) => ({ superPower }));
 
         await SuperPower.bulkCreate(newPowers, { transaction, validate: true });
         // await hero.addSuperPowers(oldPowersList, { transaction, validate: true });
@@ -44,6 +46,45 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
       return { superHero: hero, superPowers };
     });
     res.status(201).send({ data: superHero });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getHero: RequestHandler = async (req, res, next) => {
+  const {
+    params: { heroId },
+  } = req;
+
+  const hero = await SuperHero.findByPk(heroId);
+
+  if (!hero) {
+    return next(createHttpError(404, `SuperHero not found: ${heroId}`));
+  }
+  // @ts-ignore
+  req.hero = hero;
+  next();
+};
+
+export const addHeroToPower: RequestHandler = async (req, res, next) => {
+  const {
+    params: { powerId },
+    // @ts-ignore
+    hero,
+  } = req;
+
+  try {
+    // findAll({where: superPower in powersList})
+    const power = await SuperPower.findByPk(powerId);
+
+    if (!power) {
+      throw createHttpError(404, `SuperPower not found: ${powerId}`);
+    }
+
+    // await power.addSuperHero(hero);
+    await hero.addSuperPower(power);
+
+    res.send({ data: 'Hero added' });
   } catch (error) {
     next(error);
   }

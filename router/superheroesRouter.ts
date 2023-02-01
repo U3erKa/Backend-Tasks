@@ -4,8 +4,10 @@ import path from 'path';
 
 import { addImagesToHero } from '../controller/imageController';
 import {
+  addHeroToPower,
   createSuperHero,
   deleteSuperHero,
+  getHero,
   getSuperHero,
   getSuperHeroes,
   updateSuperHero,
@@ -31,5 +33,7 @@ superheroesRouter
   .post(upload.array('images'), addImagesToHero)
   .put(updateSuperHero)
   .delete(deleteSuperHero);
+
+superheroesRouter.route('/:heroId/superpowers/:powerId').post(getHero, addHeroToPower);
 
 export default superheroesRouter;
