@@ -37,10 +37,10 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
         const newPowers = newPowersList.map((superPower) => ({ superPower }));
 
         await SuperPower.bulkCreate(newPowers, { transaction, validate: true });
-        // await hero.addSuperPowers(oldPowersList, { transaction, validate: true });
-        if (oldPowersList.length !== 0) {
-          throw createHttpError(400, 'SuperPowers must be unique');
-        }
+        await hero.addSuperPowers(oldPowersList, {
+          transaction,
+          validate: true,
+        });
       }
 
       return { superHero: hero, superPowers };

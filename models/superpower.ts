@@ -45,7 +45,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
     static associate(models: DB) {
       SuperPower.belongsToMany(models.SuperHero, {
         through: 'superheroes_to_superpowers',
-        foreignKey: 'heroId',
+        foreignKey: 'powerId',
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
         as: 'superHeroes',

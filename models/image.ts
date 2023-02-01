@@ -49,7 +49,7 @@ export = (sequelize: Sequelize, DataTypes: typeof _DataTypes) => {
             const supportedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
             const ext = filename.split('.')[1];
 
-            if (supportedExtensions.includes(ext)) {
+            if (!supportedExtensions.includes(ext)) {
               throw new TypeError(`"${ext}" is not supported file extension`);
             }
           },
