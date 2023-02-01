@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-superheroesRouter.route('/').get(getSuperHeroes).post(createSuperHero);
+superheroesRouter.route('/').get(getSuperHeroes).post(upload.array('images'), createSuperHero);
 superheroesRouter
   .route('/:heroId')
   .get(getSuperHero)

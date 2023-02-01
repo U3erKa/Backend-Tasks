@@ -5,6 +5,7 @@ import type { RequestHandler } from 'express';
 
 export const createSuperHero: RequestHandler = async (req, res, next) => {
   const {
+    files,
     body: { superPowers, images, ...heroData },
   } = req;
 
@@ -41,6 +42,15 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
           transaction,
           validate: true,
         });
+      }
+
+      if (files?.length) {
+        if (!(files instanceof Array)) {
+          throw createHttpError(400, `"files" field must be an array: ${typeof files}`);
+        }
+
+        const imagesPaths = files.map((file) => ({ path: file.filename, heroId: hero.id }));
+        await Image.bulkCreate(imagesPaths, { transaction, validate: true });
       }
 
       return { superHero: hero, superPowers };
