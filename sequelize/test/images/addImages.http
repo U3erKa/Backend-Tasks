@@ -1,0 +1,9 @@
+POST http://localhost:5000/superheroes/4
+Content-Type: application/json
+
+{
+  "images": [
+    "upload your image(s)",
+    "upload your image(s)"
+  ]
+}

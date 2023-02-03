@@ -1,0 +1,16 @@
+POST http://localhost:5000/superheroes
+Content-Type: application/json
+
+{
+  "nickname": "Ironwolf",
+  "realName": "Wolf Aufovich",
+  "originDescription": "Forest wolf...",
+  "catchPhrase": "Catchphrase 1",
+  "superPowers": [
+    "clip through walls",
+    "flight",
+    "xray vision"
+  ],
+  "images": [
+  ]
+}

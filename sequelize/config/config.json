@@ -1,0 +1,15 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "testdb_dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "migrationStorage": "sequelize",
+    "seederStorage": "sequelize"
+  },
+  "test": {
+  },
+  "production": {
+  }
+}
