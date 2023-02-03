@@ -1,7 +1,8 @@
 import createHttpError from 'http-errors';
 
 import { Image, sequelize, SuperHero, SuperPower } from '../models';
-import { addSuperPowers, addImages } from '../services/heroService';
+import { addImages } from '../services/imageService';
+import { addPowersToHero } from '../services/powerService';
 
 import type { RequestHandler } from 'express';
 import type { SuperHero as _SuperHero } from '../types';
@@ -22,7 +23,7 @@ export const createSuperHero: RequestHandler = async (req, res, next) => {
       const hero = await SuperHero.create(heroData, { transaction, validate: true });
 
       result.hero = hero;
-      result.powers = await addSuperPowers({ superPowers, transaction, hero });
+      result.powers = await addPowersToHero({ superPowers, transaction, hero });
       result.images = await addImages({ files, transaction, hero });
 
       return result;

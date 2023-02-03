@@ -1,22 +1,20 @@
 import createHttpError from 'http-errors';
-import { SuperPower } from '../models';
+import { Op } from 'sequelize';
 
+import { SuperPower } from '../models';
+import { createPowers } from '../services/powerService';
 import type { RequestHandler } from 'express';
 
 export const createSuperPower: RequestHandler = async (req, res, next) => {
   const { body } = req;
 
   try {
-    const powers = Array.isArray(body)
-      ? body.map((power: string) => ({ superPower: power }))
-      : null;
+    const [newPowersList] = await createPowers({ superPowers: body, uniqueOnly: true });
+    const newPowers = await SuperPower.findAll({
+      where: { superPower: { [Op.in]: newPowersList } },
+    });
 
-    if (!powers) {
-      throw TypeError('Request body must be array of strings');
-    }
-    const superPowers = await SuperPower.bulkCreate(powers);
-
-    res.status(201).send({ data: superPowers });
+    res.status(201).send({ data: newPowers });
   } catch (error) {
     next(error);
   }
